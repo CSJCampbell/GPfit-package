@@ -3,8 +3,8 @@ cache: packages
 sudo: false
 
 env:
-  - PKG_PATH=$TRAVIS_BUILD_DIR/GPfit
-  - R_LIBS=$TRAVIS_BUILD_DIR/temp-lib
+  - PKG_PATH=$TRAVIS_BUILD_DIR/GPfit-package/GPfit
+  - R_LIBS=$TRAVIS_BUILD_DIR/GPfit-package/temp-lib
 
 addons:
   apt:
@@ -13,4 +13,4 @@ addons:
 
 script:
   - mkdir $R_LIBS
-  - Rscript installation.R
+  - Rscript $TRAVIS_BUILD_DIR/GPfit-package/installation.R
