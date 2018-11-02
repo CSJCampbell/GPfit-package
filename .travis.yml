@@ -9,7 +9,9 @@ env:
 addons:
   apt:
     packages:
+      - update
       - zlib1g-dev
 
 script:
+  - mkdir $R_LIBS
   - Rscript installation.R
