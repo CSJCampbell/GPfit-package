@@ -1,8 +1,15 @@
- language: R
- cache: packages
- sudo: false
+language: R
+cache: packages
+sudo: false
 
- addons:
-   apt:
-     packages:
+env:
+  - PKG_PATH=$TRAVIS_BUILD_DIR/GPfit
+  - R_LIBS=$TRAVIS_BUILD_DIR/temp-lib
+
+addons:
+  apt:
+    packages:
       - zlib1g-dev
+
+script:
+  - Rscript installation.R
