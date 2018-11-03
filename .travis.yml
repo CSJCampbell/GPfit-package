@@ -1,5 +1,5 @@
 
-before_script: cd GPfit
+before_install: cd GPfit
 
 language: R
 cache: packages
