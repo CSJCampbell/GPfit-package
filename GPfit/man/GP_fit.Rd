@@ -5,8 +5,8 @@
 \title{Gaussian Process Model fitting}
 \usage{
 GP_fit(X, Y, control = c(200 * d, 80 * d, 2 * d), nug_thres = 20,
-  trace = FALSE, maxit = 100, corr = list(type = "exponential", power =
-  1.95), optim_start = NULL)
+  trace = FALSE, maxit = 100, corr = list(type = "exponential", power
+  = 1.95), optim_start = NULL)
 }
 \arguments{
 \item{X}{the (\code{n x d}) design matrix}
@@ -85,15 +85,15 @@ used in finding the lower bound on the nugget
 n = 5
 d = 1 
 computer_simulator <- function(x){
-x = 2*x+0.5
-y = sin(10*pi*x)/(2*x) + (x-1)^4
-return(y)
+    x = 2 * x + 0.5
+    y = sin(10 * pi * x) / (2 * x) + (x - 1)^4
+    return(y)
 }
 set.seed(3)
 library(lhs)
-x = maximinLHS(n,d)
+x = maximinLHS(n, d)
 y = computer_simulator(x)
-GPmodel = GP_fit(x,y)
+GPmodel = GP_fit(x, y)
 print(GPmodel)
 
 
@@ -101,35 +101,35 @@ print(GPmodel)
 n = 7
 d = 1
 computer_simulator <- function(x) {
-y <- log(x+0.1)+sin(5*pi*x)
-return(y)
+    y <- log(x + 0.1) + sin(5 * pi * x)
+    return(y)
 }
 set.seed(1)
 library(lhs)
-x = maximinLHS(n,d)
+x = maximinLHS(n, d)
 y = computer_simulator(x)
-GPmodel = GP_fit(x,y)
+GPmodel = GP_fit(x, y)
 print(GPmodel, digits = 4)
 
 
 ## 2D Example: GoldPrice Function
 computer_simulator <- function(x) {
-x1=4*x[,1] - 2
-x2=4*x[,2] - 2
-t1 = 1 + (x1 + x2 + 1)^2*(19 - 14*x1 + 3*x1^2 - 14*x2 + 
-6*x1*x2 + 3*x2^2)
-t2 = 30 + (2*x1 -3*x2)^2*(18 - 32*x1 + 12*x1^2 + 48*x2 - 
-36*x1*x2 + 27*x2^2)
-y = t1*t2
-return(y)
+    x1 = 4 * x[, 1] - 2
+    x2 = 4 * x[, 2] - 2
+    t1 = 1 + (x1 + x2 + 1)^2 * (19 - 14 * x1 + 3 * x1^2 - 14 * x2 + 
+        6 * x1 *x2 + 3 * x2^2)
+    t2 = 30 + (2 * x1 - 3 * x2)^2 * (18 - 32 * x1 + 12 * x1^2 + 48 * x2 - 
+        36 * x1 * x2 + 27 * x2^2)
+    y = t1 * t2
+    return(y)
 }
 n = 30
 d = 2
 set.seed(1)
 library(lhs)
-x = maximinLHS(n,d) 
+x = maximinLHS(n, d) 
 y = computer_simulator(x)
-GPmodel = GP_fit(x,y)
+GPmodel = GP_fit(x, y)
 print(GPmodel)
 
 }

@@ -4,8 +4,8 @@
 \alias{GP_deviance}
 \title{Computes the Deviance of a GP model}
 \usage{
-GP_deviance(beta, X, Y, nug_thres = 20, corr = list(type = "exponential",
-  power = 1.95))
+GP_deviance(beta, X, Y, nug_thres = 20, corr = list(type =
+  "exponential", power = 1.95))
 }
 \arguments{
 \item{beta}{a (\emph{d} x 1) vector of correlation hyper-parameters, as

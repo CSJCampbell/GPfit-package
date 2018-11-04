@@ -6,7 +6,8 @@
 \usage{
 \method{plot}{GP}(x, M = 1, range = c(0, 1), resolution = 50,
   colors = c("black", "blue", "red"), line_type = c(1, 2), pch = 20,
-  cex = 1, legends = FALSE, surf_check = FALSE, response = TRUE, ...)
+  cex = 1, legends = FALSE, surf_check = FALSE, response = TRUE,
+  ...)
 }
 \arguments{
 \item{x}{a class \code{GP} object estimated by \code{GP_fit}}
@@ -55,9 +56,9 @@ simulators with 1 and 2 dimensional inputs (i.e. d = 1,2).
 n = 5
 d = 1 
 computer_simulator <- function(x){
-x = 2*x+0.5
-y = sin(10*pi*x)/(2*x) + (x-1)^4
-return(y)
+    x = 2 * x + 0.5
+    y = sin(10 * pi * x) / (2 * x) + (x - 1)^4
+    return(y)
 }
 set.seed(3)
 library(lhs)
