@@ -1,0 +1,12 @@
+Package: GPfit
+Title: Gaussian Processes Modeling
+Version: 1.0-2
+Date: 2018-09-06
+Author: Blake MacDoanld, Hugh Chipman, Chris Campbell, Pritam Ranjan
+Maintainer: Hugh Chipman <hugh.chipman@acadiau.ca>
+Description: A computationally stable approach of fitting a Gaussian Process (GP) model to a deterministic simulator. 
+Imports: lhs (>= 0.5), lattice (>= 0.18-8)
+Suggests: testthat
+License: GPL-2
+NeedsCompilation: no
+RoxygenNote: 6.1.0
