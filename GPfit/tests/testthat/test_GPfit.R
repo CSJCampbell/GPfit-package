@@ -46,19 +46,15 @@ test_that("check GP_fit", {
         object = gp2$Y, 
         expected = matrix(y1))
     sig2 <- 64428210.0805298
-    if (.Platform$OS.type != "windows") {
-        sig2 <- sig2 + 59.1456287875772 
-    }
     expect_equal(
         object = gp2$sig2,
-        expected = sig2)
+        expected = sig2, 
+        tol = 1e-5)
     beta3 <- -4.45455963230017
-    if (.Platform$OS.type != "windows") {
-        beta3 <- beta3 - 2.07316635503219e-06
-    }
     expect_equal(
         object = gp2$beta,
-        expected = c(-10, -10, beta3))
+        expected = c(-10, -10, beta3),
+        tol = 1e-5)
     expect_equal(
         object = gp2$delta,
         expected = 6.59564703952257e-08)

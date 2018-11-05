@@ -3,10 +3,11 @@
 ## May 18th, 2012
 
 
-
-#' Model Predictions from GPfit
+#' @name predict
+#' @aliases predict.GP
+#' @title Model Predictions from GPfit
 #' 
-#' Computes the regularized predicted response \eqn{\hat{y}_{\delta_{lb},M}(x)}
+#' @description Computes the regularized predicted response \eqn{\hat{y}_{\delta_{lb},M}(x)}
 #' and the mean squared error \eqn{s^2_{\delta_{lb},M}(x)} for a new set of
 #' inputs using the fitted GP model.
 #' 
@@ -36,71 +37,62 @@
 #' @examples
 #' 
 #' ## 1D Example
-#' n = 5
-#' d = 1
+#' n <- 5
+#' d <- 1
 #' computer_simulator <- function(x){
-#' x = 2*x+0.5
-#' y = sin(10*pi*x)/(2*x) + (x-1)^4
-#' return(y)
+#'     x <- 2*x+0.5
+#'     sin(10*pi*x)/(2*x) + (x-1)^4
 #' }
 #' set.seed(3)
 #' library(lhs)
-#' x = maximinLHS(n,d)
-#' y = computer_simulator(x)
-#' xvec <- seq(from=0,to=1,length.out=10)
-#' GPmodel = GP_fit(x,y)
-#' GPprediction = predict.GP(GPmodel,xvec)
-#' yhat = GPprediction$Y_hat
-#' mse = GPprediction$MSE
-#' completedata = GPprediction$complete_data
-#' completedata
+#' x <- maximinLHS(n,d)
+#' y <- computer_simulator(x)
+#' xvec <- seq(from = 0, to = 1, length.out = 10)
+#' GPmodel <- GP_fit(x, y)
+#' head(fitted(GPmodel))
+#' lapply(predict(GPmodel, xvec), head)
+#' 
 #' 
 #' 
 #' ## 1D Example 2
-#' n = 7
-#' d = 1
+#' n <- 7
+#' d <- 1
 #' computer_simulator <- function(x) {
-#' y <- log(x+0.1)+sin(5*pi*x)
-#' return(y)
+#'     log(x+0.1)+sin(5*pi*x)
 #' }
 #' set.seed(1)
 #' library(lhs)
-#' x = maximinLHS(n,d)
-#' y = computer_simulator(x)
-#' xvec <- seq(from=0,to=1,length.out=10)
-#' GPmodel = GP_fit(x,y)
-#' GPprediction = predict.GP(GPmodel,xvec)
-#' yhat = GPprediction$Y_hat
-#' mse = GPprediction$MSE
-#' completedata = GPprediction$complete_data
-#' 
+#' x <- maximinLHS(n,d)
+#' y <- computer_simulator(x)
+#' xvec <- seq(from = 0,to = 1, length.out = 10)
+#' GPmodel <- GP_fit(x, y)
+#' head(fitted(GPmodel))
+#' predict(GPmodel, xvec)
 #' 
 #' ## 2D Example: GoldPrice Function
 #' computer_simulator <- function(x) {
-#' x1=4*x[,1] - 2
-#' x2=4*x[,2] - 2
-#' t1 = 1 + (x1 + x2 + 1)^2*(19 - 14*x1 + 3*x1^2 - 14*x2 + 
-#' 6*x1*x2 + 3*x2^2)
-#' t2 = 30 + (2*x1 -3*x2)^2*(18 - 32*x1 + 12*x1^2 + 48*x2 - 
-#' 36*x1*x2 + 27*x2^2)
-#' y = t1*t2
-#' return(y)
+#'     x1 <- 4*x[,1] - 2
+#'     x2 <- 4*x[,2] - 2
+#'     t1 <- 1 + (x1 + x2 + 1)^2*(19 - 14*x1 + 3*x1^2 - 14*x2 + 
+#'         6*x1*x2 + 3*x2^2)
+#'     t2 <- 30 + (2*x1 -3*x2)^2*(18 - 32*x1 + 12*x1^2 + 48*x2 - 
+#'         36*x1*x2 + 27*x2^2)
+#'     y <- t1*t2
+#'     return(y)
 #' }
-#' n = 10
-#' d = 2
+#' n <- 10
+#' d <- 2
 #' set.seed(1)
 #' library(lhs)
-#' x = maximinLHS(n,d) 
-#' y = computer_simulator(x)
-#' GPmodel = GP_fit(x,y)
-#' 
-#' xvector = seq(from=0,to=1,length.out=10)
-#' xvec = expand.grid(x = xvector, y=xvector)
-#' xvec = as.matrix(xvec)
-#' GPprediction = predict.GP(GPmodel,xvec)
-#' yhat = GPprediction$Y_hat
-#' mse = GPprediction$MSE
-#' completedata = GPprediction$complete_data
+#' x <- maximinLHS(n,d) 
+#' y <- computer_simulator(x)
+#' GPmodel <- GP_fit(x,y)
+#' # fitted values
+#' head(fitted(GPmodel))
+#' # new data
+#' xvector <- seq(from = 0,to = 1, length.out = 10)
+#' xdf <- expand.grid(x = xvector, y = xvector)
+#' predict(GPmodel, xdf)
 #' 
 #' @export predict.GP
 #' @S3method predict GP
@@ -110,148 +102,149 @@ predict.GP <- function(
     xnew = object$X,
     M = 1, 
     ...) {
-    if (!is.GP(object)){
-    	stop("The object in question is not of class \"GP\" \n")
+    if (!is.GP(object)) {
+        stop("The object in question is not of class \"GP\" \n")
     }
     if (!is.matrix(xnew)) {
-    	xnew <- as.matrix(xnew)
+        xnew <- as.matrix(xnew)
     }
     if (M <= 0) {
-    	M = 1
-    	warning("M was assigned non-positive, changed to 1. \n")
+        M <- 1
+        warning("M was assigned non-positive, changed to 1. \n")
     }
     
-    X = object$X
-    Y = object$Y
-    n = nrow(X)
-    d = ncol(X)
-    corr = object$correlation_param
-    power = corr$power
-    nu = corr$nu
+    X <- object$X
+    Y <- object$Y
+    n <- nrow(X)
+    d <- ncol(X)
+    corr <- object$correlation_param
+    power <- corr$power
+    nu <- corr$nu
     
     if (d != ncol(xnew)){
-    	stop("The training and prediction data sets are of 
-    	different dimensions. \n")
+        stop("The training and prediction data sets are of 
+        different dimensions. \n")
     }
     
-    beta = object$beta
-    sig2 = object$sig2
-    delta = object$delta
+    beta <- object$beta
+    sig2 <- object$sig2
+    delta <- object$delta
     
     dim(beta) <- c(d, 1L)
-    R = corr_matrix(X,beta,corr)
+    R <- corr_matrix(X,beta,corr)
     
-    One = rep(1L, n)
-    LO = diag(n)
-    Sig = R + delta*LO
-    L = chol(Sig)
+    One <- rep(1L, n)
+    LO <- diag(n)
+    Sig <- R + delta*LO
+    L <- chol(Sig)
     
     ## adding in the check on delta to see about the iterative approach
     if (delta == 0) {
-    	Sig_invOne = solve(L, solve(t(L), One))
-    	Sig_invY = solve(L, solve(t(L), Y))
-    	Sig_invLp = solve(L, solve(t(L), LO))
+        Sig_invOne <- solve(L, solve(t(L), One))
+        Sig_invY <- solve(L, solve(t(L), Y))
+        Sig_invLp <- solve(L, solve(t(L), LO))
     } else {
     ## Adding in the iterative approach section
-    	s_Onei = One
-    	s_Yi = Y
-    	s_Li = LO
-    	Sig_invOne = matrix(0, ncol = 1, nrow = n)
-    	Sig_invY = matrix(0, ncol = 1, nrow = n)
-    	Sig_invLp = matrix(0, ncol = n, nrow = n)
-    	for (it in seq_len(M)) {
-    		s_Onei = solve(L, solve(t(L), delta*s_Onei))
-    		Sig_invOne = Sig_invOne + s_Onei/delta
+        s_Onei <- One
+        s_Yi <- Y
+        s_Li <- LO
+        Sig_invOne <- matrix(0, ncol = 1, nrow = n)
+        Sig_invY <- matrix(0, ncol = 1, nrow = n)
+        Sig_invLp <- matrix(0, ncol = n, nrow = n)
+        for (it in seq_len(M)) {
+            s_Onei <- solve(L, solve(t(L), delta*s_Onei))
+            Sig_invOne <- Sig_invOne + s_Onei/delta
     
-    		s_Yi = solve(L,solve(t(L),delta*s_Yi))
-    		Sig_invY = Sig_invY + s_Yi/delta
+            s_Yi <- solve(L,solve(t(L),delta*s_Yi))
+            Sig_invY <- Sig_invY + s_Yi/delta
     
-    		s_Li = solve(L,solve(t(L),delta*s_Li))
-    		Sig_invLp = Sig_invLp + s_Li/delta
-    	}
+            s_Li <- solve(L,solve(t(L),delta*s_Li))
+            Sig_invLp <- Sig_invLp + s_Li/delta
+        }
     }
     
-    nnew = nrow(xnew)
-    Y_hat = rep(0,nnew)
-    MSE = rep(0,nnew)
+    nnew <- nrow(xnew)
+    Y_hat <- rep(0, nnew)
+    MSE <- rep(0, nnew)
     ## prediction is different between exponential and 
     ## matern correlation functions
     switch(corr$type,
         "exponential" = {
-        	for(kk in seq_len(nnew)) {
-        		## Changing to accomadate the itterative approach
-        		xn = matrix(xnew[kk,],nrow=1)
-        		r=exp(-(abs(X-as.matrix(rep(1,n))%*%(xn))^power)%*%(10^beta))
-        		yhat = (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invY
-        		Y_hat[kk] = yhat
-        	
-        		## Adding iterative steps
-        		if (delta == 0) {
-        			Sig_invr = solve(L,solve(t(L),r))
-        		} else {
-        			## if delta != 0, start iterations
-        			s_ri = r
-        			Sig_invr = matrix(0, ncol = 1, nrow = n)
-        			for (it in seq_len(M)) {
-        				s_ri = solve(L,solve(t(L),delta*s_ri))
-        				Sig_invr = Sig_invr + s_ri/delta
-        			}
-        		}
-        		cp_delta_r = (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invr
-        	
-        		cp_delta_Lp = (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invLp
-        		mse = sig2*(1-2*cp_delta_r+cp_delta_Lp%*%R%*%t(cp_delta_Lp))
-        		MSE[kk] = mse*(mse>0)
-        	}
+            for (kk in seq_len(nnew)) {
+                ## Changing to accomadate the itterative approach
+                xn <- matrix(xnew[kk,], nrow = 1)
+                r <- exp(-(abs(X-as.matrix(rep(1,n))%*%(xn))^power)%*%(10^beta))
+                yhat <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invY
+                Y_hat[kk] <- yhat
+                
+                ## Adding iterative steps
+                if (delta == 0) {
+                    Sig_invr <- solve(L,solve(t(L),r))
+                } else {
+                    ## if delta != 0, start iterations
+                    s_ri <- r
+                    Sig_invr <- matrix(0, ncol = 1, nrow = n)
+                    for (it in seq_len(M)) {
+                        s_ri <- solve(L,solve(t(L),delta*s_ri))
+                        Sig_invr <- Sig_invr + s_ri/delta
+                    }
+                }
+                cp_delta_r <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invr
+            
+                cp_delta_Lp <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invLp
+                mse <- sig2*(1-2*cp_delta_r+cp_delta_Lp%*%R%*%t(cp_delta_Lp))
+                MSE[kk] <- mse*(mse>0)
+            }
         },
         "matern" = {
-        	for (kk in seq_len(nnew)) {
-        		## Changing to accomodate the iterative approach
-        		xn = matrix(xnew[kk,],nrow=1)
-        		temp = 10^beta
-        		temp = matrix(temp,ncol=d,nrow=(length(X)/d),byrow=TRUE)
-        		temp = 2*sqrt(nu)*abs(X-as.matrix(rep(1,n))%*%(xn))*(temp)
-        		ID = which(temp==0)
-        
-        		rd=(1/(gamma(nu)*2^(nu-1)))*(temp^nu)*besselK(temp,nu)	
-        		rd[ID]=1
-        
-        		r = matrix(apply(rd,1,prod),ncol=1)		
-        		yhat = (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invY
-        		Y_hat[kk] = yhat
-        	
-        		## Adding itterative steps
-        		if (delta == 0) {
-        			Sig_invr = solve(L,solve(t(L),r))
-        		} else {
-        			## if delta != 0, start itterations
-        			s_ri = r
-        			Sig_invr = matrix(0, ncol = 1, nrow = n)
-        			for (it in seq_len(M)) {
-        				s_ri = solve(L,solve(t(L),delta*s_ri))
-        				Sig_invr = Sig_invr + s_ri/delta
-        			}
-        		}
-        		cp_delta_r = (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invr
-        	
-        		cp_delta_Lp = (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invLp
-        		mse = sig2*(1-2*cp_delta_r+cp_delta_Lp%*%R%*%t(cp_delta_Lp))
-        		MSE[kk] = mse*(mse>0)
-        	}
+            for (kk in seq_len(nnew)) {
+                ## Changing to accomodate the iterative approach
+                xn <- matrix(xnew[kk,],nrow=1)
+                temp <- 10^beta
+                temp <- matrix(temp,ncol=d,nrow=(length(X)/d),byrow=TRUE)
+                temp <- 2*sqrt(nu)*abs(X-as.matrix(rep(1,n))%*%(xn))*(temp)
+                ID <- which(temp==0)
+                
+                rd<-(1/(gamma(nu)*2^(nu-1)))*(temp^nu)*besselK(temp,nu)    
+                rd[ID]<-1
+                
+                r <- matrix(apply(rd,1,prod),ncol=1)        
+                yhat <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invY
+                Y_hat[kk] <- yhat
+                
+                ## Adding itterative steps
+                if (delta == 0) {
+                    Sig_invr <- solve(L,solve(t(L),r))
+                } else {
+                    ## if delta != 0, start itterations
+                    s_ri <- r
+                    Sig_invr <- matrix(0, ncol = 1, nrow = n)
+                    for (it in seq_len(M)) {
+                        s_ri <- solve(L,solve(t(L),delta*s_ri))
+                        Sig_invr <- Sig_invr + s_ri/delta
+                    }
+                }
+                cp_delta_r <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invr
+            
+                cp_delta_Lp <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invLp
+                mse <- sig2*(1-2*cp_delta_r+cp_delta_Lp%*%R%*%t(cp_delta_Lp))
+                MSE[kk] <- mse*(mse>0)
+            }
         }, 
         stop("unrecognised corr type"))
     
-    prediction = NULL
+    prediction <- NULL
     
-    full_pred = cbind(xnew, Y_hat, MSE)
-    colnames(full_pred) = c(paste0("xnew.", seq_len(d)), "Y_hat", "MSE")
-    prediction$Y_hat = Y_hat
-    prediction$MSE = MSE
-    prediction$complete_data = full_pred
+    full_pred <- cbind(xnew, Y_hat, MSE)
+    colnames(full_pred) <- c(paste0("xnew.", seq_len(d)), "Y_hat", "MSE")
+    prediction$Y_hat <- Y_hat
+    prediction$MSE <- MSE
+    prediction$complete_data <- full_pred
     
     return(prediction)
 }
 
+#' @describeIn predict The \code{fitted} method extracts the complete data.
 #' @export fitted.GP
 #' @S3method fitted GP
 
