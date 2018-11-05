@@ -38,12 +38,18 @@ NULL
 #' @description Perform calculation:
 #' (x - min(x)) / (max(x) - min(x))
 #' @param x numeric vector
+#' @param range numeric vector additional values for shrinking
+#' distribution of values within the 0-1 space, without affecting
+#' limits of x
 #' @return numeric vector
 #' @export
 #' @examples
 #' scale_norm(x = c(-1, 4, 10, 182))
+#' # lower bound extended beyond -1
+#' # upper bound still range of data
+#' scale_norm(x = c(-1, 4, 10, 182), range = c(-100, 100))
 
-scale_norm <- function(x) {
-    (x - min(x, na.rm = TRUE)) / (
-        max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+scale_norm <- function(x, range = NULL) {
+    (x - min(c(x, range), na.rm = TRUE)) / (
+        max(c(x, range), na.rm = TRUE) - min(c(x, range), na.rm = TRUE))
 }
