@@ -101,6 +101,7 @@
 #' @export plot.GP
 #' @S3method plot GP
 #' @importFrom lattice wireframe levelplot
+#' @importFrom graphics legend lines matplot
 
 plot.GP <- function(
     x,
