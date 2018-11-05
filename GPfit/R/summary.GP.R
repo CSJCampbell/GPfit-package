@@ -48,7 +48,7 @@
 #' summary(GPmodel)
 #' 
 #' @export summary.GP
-#' @method summary GP
+#' @S3method summary GP
 
 summary.GP <- function(object,...){
 	print(object, ...)
