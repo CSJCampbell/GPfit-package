@@ -5,6 +5,7 @@ A computationally stable approach of fitting a Gaussian Process (GP) model to a 
 Branch of CRAN package with recommended updates. Changes improve performance by ~2 times.
 
 ```{r}
+library(GPfit)
 set.seed(45341)
 # response
 y1 <- mtcars$mpg[-id]
