@@ -131,6 +131,7 @@
 #' 
 #' @export GP_fit
 #' @importFrom lhs maximinLHS
+#' @importFrom stats kmeans optim predict
 
 GP_fit <- function(
     X,
