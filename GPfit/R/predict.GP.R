@@ -103,7 +103,7 @@
 #' completedata = GPprediction$complete_data
 #' 
 #' @export predict.GP
-#' @method predict GP
+#' @S3method predict GP
 
 predict.GP <- function(
     object,
@@ -253,7 +253,7 @@ predict.GP <- function(
 }
 
 #' @export fitted.GP
-#' @method fitted GP
+#' @S3method fitted GP
 
 fitted.GP <- function(object, ...) {
     predict(object)$complete_data
