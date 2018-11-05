@@ -74,9 +74,6 @@ test_that("check predict.GP", {
     gpp3 <- predict(gp2, xnew = cbind(nn + 1, 0, c(0.5, 0.9)))
     yh3 <- c(16.895212046802, 14.3097567856312)
     ms3 <- c(14.0864286965686, 11.8945074975033)
-    if (.Platform$OS.type != "windows") {
-        ms3 <- c(9.77087612234377, 9.80164208980456)
-    }
     expect_equal(
         object = gpp3$Y_hat, 
         expected = yh3, 
