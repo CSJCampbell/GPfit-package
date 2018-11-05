@@ -52,7 +52,7 @@
 #' print(GPmodel,digits = 3)
 #' 
 #' @export print.GP
-#' @method print GP
+#' @S3method print GP
 
 print.GP <- function(x, ...) {
     if (!is.GP(x)) {
