@@ -53,7 +53,6 @@
 #' lapply(predict(GPmodel, xvec), head)
 #' 
 #' 
-#' 
 #' ## 1D Example 2
 #' n <- 7
 #' d <- 1
@@ -94,8 +93,9 @@
 #' xdf <- expand.grid(x = xvector, y = xvector)
 #' predict(GPmodel, xdf)
 #' 
-#' @export predict.GP
-#' @S3method predict GP
+#' @export
+#' @importFrom stats predict fitted
+#' @method predict GP
 
 predict.GP <- function(
     object,
@@ -245,8 +245,8 @@ predict.GP <- function(
 }
 
 #' @describeIn predict The \code{fitted} method extracts the complete data.
-#' @export fitted.GP
-#' @S3method fitted GP
+#' @export
+#' @method fitted GP
 
 fitted.GP <- function(object, ...) {
     predict(object)$complete_data

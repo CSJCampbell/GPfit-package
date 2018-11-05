@@ -41,54 +41,54 @@
 #' @examples
 #' 
 #' ## 1D Example 1
-#' n = 5
-#' d = 1 
+#' n <- 5
+#' d <- 1 
 #' computer_simulator <- function(x){
-#'     x = 2 * x + 0.5
-#'     y = sin(10 * pi * x) / (2 * x) + (x - 1)^4
+#'     x <- 2 * x + 0.5
+#'     y <- sin(10 * pi * x) / (2 * x) + (x - 1)^4
 #'     return(y)
 #' }
 #' set.seed(3)
 #' library(lhs)
-#' x = maximinLHS(n,d)
-#' y = computer_simulator(x)
-#' GPmodel = GP_fit(x,y)
+#' x <- maximinLHS(n,d)
+#' y <- computer_simulator(x)
+#' GPmodel <- GP_fit(x,y)
 #' plot(GPmodel)
 #' 
 #' 
 #' ## 1D Example 2
-#' n = 7
-#' d = 1
+#' n <- 7
+#' d <- 1
 #' computer_simulator <- function(x) {
-#' y = log(x+0.1)+sin(5*pi*x)
+#' y <- log(x+0.1)+sin(5*pi*x)
 #' return(y)
 #' }
 #' set.seed(1)
 #' library(lhs)
-#' x = maximinLHS(n,d)
-#' y = computer_simulator(x)
-#' GPmodel = GP_fit(x,y)
+#' x <- maximinLHS(n,d)
+#' y <- computer_simulator(x)
+#' GPmodel <- GP_fit(x, y)
 #' ## Plotting with changes from the default line type and characters
 #' plot(GPmodel, resolution = 100, line_type = c(6,2), pch = 5)
 #' 
 #' 
 #' ## 2D Example: GoldPrice Function
 #' computer_simulator <- function(x) {
-#'     x1 = 4*x[,1] - 2
-#'     x2 = 4*x[,2] - 2
-#'     t1 = 1 + (x1 + x2 + 1)^2*(19 - 14*x1 + 3*x1^2 - 14*x2 + 
+#'     x1 <- 4*x[,1] - 2
+#'     x2 <- 4*x[,2] - 2
+#'     t1 <- 1 + (x1 + x2 + 1)^2*(19 - 14*x1 + 3*x1^2 - 14*x2 + 
 #'         6*x1*x2 + 3*x2^2)
-#'     t2 = 30 + (2*x1 -3*x2)^2*(18 - 32*x1 + 12*x1^2 + 48*x2 - 
+#'     t2 <- 30 + (2*x1 -3*x2)^2*(18 - 32*x1 + 12*x1^2 + 48*x2 - 
 #'         36*x1*x2 + 27*x2^2)
-#'     y = t1*t2
+#'     y <- t1*t2
 #'     return(y)
 #' }
-#' n = 30 
-#' d = 2
+#' n <- 30 
+#' d <- 2
 #' set.seed(1)
-#' x = lhs::maximinLHS(n, d) 
-#' y = computer_simulator(x)
-#' GPmodel = GP_fit(x, y)
+#' x <- lhs::maximinLHS(n, d) 
+#' y <- computer_simulator(x)
+#' GPmodel <- GP_fit(x, y)
 #' ## Basic level plot
 #' plot(GPmodel)
 #' ## Adding Contours and increasing the number of levels
@@ -98,10 +98,10 @@
 #' ## Plotting the Error Surface with color
 #' plot(GPmodel, surf_check = TRUE, response = FALSE, shade = TRUE)
 #' 
-#' @export plot.GP
-#' @S3method plot GP
+#' @export
+#' @method plot GP
 #' @importFrom lattice wireframe levelplot
-#' @importFrom graphics legend lines matplot
+#' @importFrom graphics legend lines matplot plot
 
 plot.GP <- function(
     x,
@@ -119,10 +119,10 @@ plot.GP <- function(
     if (!is.GP(x)) {
     	stop("The object in question is not of class \"GP\" \n")
     }
-    X = x$X
-    Y = x$Y
-    n = nrow(X)
-    d = ncol(X)
+    X <- x$X
+    Y <- x$Y
+    n <- nrow(X)
+    d <- ncol(X)
     
     switch(d,
         {
@@ -130,28 +130,28 @@ plot.GP <- function(
             # to avoid mixed returns
             
         	# make the prediction values
-        	xvec = matrix(seq(from=range[1],to=range[2],length.out=resolution),ncol=1)
+        	xvec <- matrix(seq(from=range[1],to=range[2],length.out=resolution),ncol=1)
         	GPprediction=predict.GP(x,xvec,M)
-        	Y_hat = GPprediction$Y_hat
-        	MSE = GPprediction$MSE
+        	Y_hat <- GPprediction$Y_hat
+        	MSE <- GPprediction$MSE
         
         	# Finding a good range to plot over
-        	max_height = max(Y_hat, Y, Y_hat+2*sqrt(MSE),Y_hat-2*sqrt(MSE))
-        	min_height = min(Y_hat, Y, Y_hat+2*sqrt(MSE),Y_hat-2*sqrt(MSE))
-        	max_length = max(X,xvec)
-        	min_length = min(X,xvec)
+        	max_height <- max(Y_hat, Y, Y_hat+2*sqrt(MSE),Y_hat-2*sqrt(MSE))
+        	min_height <- min(Y_hat, Y, Y_hat+2*sqrt(MSE),Y_hat-2*sqrt(MSE))
+        	max_length <- max(X,xvec)
+        	min_length <- min(X,xvec)
         
         	# Plotting the Prediction and errors
-        	leg.txt = c(expression("Model Prediction:     " ~ hat(y)(x)), 
+        	leg.txt <- c(expression("Model Prediction:     " ~ hat(y)(x)), 
         		expression("Uncertanity Bounds: " ~ hat(y)(x) %+-% 2 %*% s(x)),
         		"Design Points")
-        	matplot(X,Y,cex=cex[1],col=colors[1],pch=pch[1],
-           		ylim=c(min_height,max_height),xlim=c(min_length,max_length),
+        	matplot(X, Y, cex = cex[1], col = colors[1], pch = pch[1],
+           		ylim = c(min_height, max_height), xlim = c(min_length, max_length),
         		xlab = "x (Input Variable)", ylab = "Model Prediction")
-        	lines(xvec,Y_hat,col=colors[2],lty=line_type[1])			#Predicted Function
-        	lines(xvec,Y_hat-2*sqrt(MSE),col=colors[3],lty=line_type[2])	#Errors
-        	lines(xvec,Y_hat+2*sqrt(MSE),col=colors[3],lty=line_type[2])	#Errors
-        	if(legends==TRUE){
+        	lines(xvec, Y_hat, col = colors[2], lty = line_type[1])			#Predicted Function
+        	lines(xvec, Y_hat-2*sqrt(MSE), col = colors[3], lty = line_type[2])	#Errors
+        	lines(xvec, Y_hat+2*sqrt(MSE), col = colors[3], lty = line_type[2])	#Errors
+        	if(legends == TRUE) {
         		legend(min_length, max_height, leg.txt, col = c(colors[2], colors[3], colors[1]), 
         			lty = c(line_type[1],line_type[2], -1), pch = c(-1, -1, pch[1]), 
         			pt.cex = cex[1])
@@ -159,25 +159,25 @@ plot.GP <- function(
         },
         {
         	# Making the predictions
-        	xvector = seq(from=range[1],to=range[2],length.out=resolution)
-        	xvec = expand.grid(x = xvector, y=xvector)
-        	xvec = as.matrix(xvec)
-        	GPprediction = predict.GP(x,xvec,M)
-        	Y_hat = GPprediction$Y_hat
-        	MSE = GPprediction$MSE
-        	dim(Y_hat) = c(length(xvector),length(xvector))
-        	dim(MSE) = c(length(xvector),length(xvector))
+        	xvector <- seq(from = range[1], to = range[2], length.out = resolution)
+        	xvec <- expand.grid(x = xvector, y = xvector)
+        	xvec <- as.matrix(xvec)
+        	GPprediction <- predict.GP(x, xvec, M)
+        	Y_hat <- GPprediction$Y_hat
+        	MSE <- GPprediction$MSE
+        	dim(Y_hat) <- c(length(xvector),length(xvector))
+        	dim(MSE) <- c(length(xvector),length(xvector))
         
         	if (surf_check){
         		## Wireframe Plots
         		if (response){
-        			h1 = wireframe(Y_hat,scales = list(arrows=FALSE),row.values = xvector,
+        			h1 <- wireframe(Y_hat,scales = list(arrows=FALSE),row.values = xvector,
         				column.values = xvector,
         				xlab = expression(X[1]),ylab = expression(X[2]),
         				zlab = list('Model Prediction', rot = 90),...)
         			print(h1)
         		} else {
-        			h2 = wireframe(MSE,scales = list(arrows=FALSE),row.values = xvector,
+        			h2 <- wireframe(MSE,scales = list(arrows=FALSE),row.values = xvector,
         				column.values = xvector,
         				xlab = expression(X[1]),ylab = expression(X[2]),
         				zlab = list('MSE', rot = 90),...)
@@ -187,12 +187,12 @@ plot.GP <- function(
         	} else {
         		## Contour Plotting
         		if (response){
-        			h1 = levelplot(Y_hat, xlab = expression(X[1]),ylab = expression(X[2]), 
+        			h1 <- levelplot(Y_hat, xlab = expression(X[1]),ylab = expression(X[2]), 
         				row.values = xvector, column.values = xvector,
         				xlim = range, ylim = range, ...)
         			print(h1)
         		} else {
-        			h2 = levelplot(MSE, xlab = expression(X[1]),ylab = expression(X[2]), 
+        			h2 <- levelplot(MSE, xlab = expression(X[1]),ylab = expression(X[2]), 
         				row.values = xvector, column.values = xvector, 
         				xlim = range, ylim = range, ...)
         			print(h2)

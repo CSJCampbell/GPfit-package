@@ -15,17 +15,17 @@
 #' @examples
 #' 
 #' ## 1D example
-#' n = 5
-#' d = 1
-#' computer_simulator <- function(x) {
-#'     x = 2*x+0.5
-#'     y = sin(10*pi*x)/(2*x) + (x-1)^4
+#' n <- 5
+#' d <- 1 
+#' computer_simulator <- function(x){
+#'     x <- 2 * x + 0.5
+#'     y <- sin(10 * pi * x) / (2 * x) + (x - 1)^4
 #'     return(y)
 #' }
 #' set.seed(3)
-#' x = lhs::maximinLHS(n, d)
-#' y = computer_simulator(x)
-#' GPmodel = GP_fit(x, y)
+#' x <- lhs::maximinLHS(n, d)
+#' y <- computer_simulator(x)
+#' GPmodel <- GP_fit(x, y)
 #' summary(GPmodel)
 #' 
 #' ## 2D Example: GoldPrice Function
@@ -39,16 +39,16 @@
 #'     y = t1*t2
 #'     return(y)
 #' }
-#' n = 10
-#' d = 2
+#' n <- 10
+#' d <- 2
 #' set.seed(1)
-#' x = lhs::maximinLHS(n, d) 
-#' y = computer_simulator(x)
-#' GPmodel = GP_fit(x, y)
+#' x <- lhs::maximinLHS(n, d) 
+#' y <- computer_simulator(x)
+#' GPmodel <- GP_fit(x, y)
 #' summary(GPmodel)
 #' 
-#' @export summary.GP
-#' @S3method summary GP
+#' @export
+#' @method summary GP
 
 summary.GP <- function(object,...){
 	print(object, ...)

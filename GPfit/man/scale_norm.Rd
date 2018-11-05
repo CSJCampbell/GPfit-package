@@ -4,10 +4,14 @@
 \alias{scale_norm}
 \title{Scale variable into normal range 0, 1}
 \usage{
-scale_norm(x)
+scale_norm(x, range = NULL)
 }
 \arguments{
 \item{x}{numeric vector}
+
+\item{range}{numeric vector additional values for shrinking
+distribution of values within the 0-1 space, without affecting
+limits of x}
 }
 \value{
 numeric vector
@@ -18,4 +22,7 @@ Perform calculation:
 }
 \examples{
 scale_norm(x = c(-1, 4, 10, 182))
+# lower bound extended beyond -1
+# upper bound still range of data
+scale_norm(x = c(-1, 4, 10, 182), range = c(-100, 100))
 }
