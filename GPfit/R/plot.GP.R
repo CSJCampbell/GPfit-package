@@ -99,7 +99,7 @@
 #' plot(GPmodel, surf_check = TRUE, response = FALSE, shade = TRUE)
 #' 
 #' @export plot.GP
-#' @method plot GP
+#' @S3method plot GP
 #' @importFrom lattice wireframe levelplot
 
 plot.GP <- function(
