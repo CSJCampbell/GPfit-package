@@ -1,6 +1,6 @@
 # GPfit-package
 
-https://travis-ci.org/CSJCampbell/GPfit-package.svg?branch=master
+[![Build Status](https://travis-ci.org/CSJCampbell/GPfit-package.svg?branch=master)](https://travis-ci.org/CSJCampbell/GPfit-package)
 
 A computationally stable approach of fitting a Gaussian Process (GP) model to a deterministic simulator. 
 
