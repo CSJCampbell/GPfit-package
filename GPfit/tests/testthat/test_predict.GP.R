@@ -75,7 +75,7 @@ test_that("check predict.GP", {
         expected = yh2, 
         tol = 1e-5)
     # mse mostly same; some differences on other platforms
-    expect_true(object = sum(abs(gpp2$complete_data[, 5] - ms2) < 1e-5) >= 10)
+    expect_true(object = sum(gpp2$complete_data[, 5] - ms2 < 1e-5) >= 10)
     # new data
     gpp3 <- predict(gp2, xnew = cbind(nn + 1, 0, c(0.5, 0.9)))
     yh3 <- c(16.895212046802, 14.3097567856312)
