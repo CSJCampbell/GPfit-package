@@ -9,12 +9,12 @@ Branch of CRAN package with recommended updates. Changes improve performance by 
 ```{r}
 library(GPfit)
 set.seed(45341)
-# response
-y1 <- mtcars$mpg[-id]
 # row dimension
 nn <- nrow(mtcars)
 id <- (nn - 1):nn
 x1 <- scale_norm(seq_len(nn - 2), range = c(1, nn))
+# response
+y1 <- mtcars$mpg[-id]
 # disp dimension
 d1 <- scale_norm(mtcars$disp)[-id]
 # matrix of inputs
