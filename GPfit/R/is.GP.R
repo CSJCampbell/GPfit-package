@@ -3,10 +3,5 @@
 ## May 8th, 2012
 
 is.GP <- function(object){
-if (inherits(object, "GP"))
-{
-	return(TRUE)
-} else {
-	return(FALSE)
-}
+    inherits(x = object, what = "GP")
 }

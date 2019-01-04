@@ -26,6 +26,9 @@ m1 <- cbind(
 gpf1 <- GP_fit(
     X = m1,
     Y = y1)
+# goodness of fit
+plot(x = fitted(gpf1), y = y1, asp = 1)
+abline(coef = c(0, 1), col = "red")
 # predict for new records
 gpp1 <- predict(gpf1, 
     xnew = cbind(

@@ -72,8 +72,8 @@ plot(GPmodel)
 n <- 7
 d <- 1
 computer_simulator <- function(x) {
-y <- log(x+0.1)+sin(5*pi*x)
-return(y)
+    y <- log(x+0.1)+sin(5*pi*x)
+    return(y)
 }
 set.seed(1)
 library(lhs)

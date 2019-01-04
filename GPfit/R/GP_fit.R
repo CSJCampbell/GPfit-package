@@ -140,16 +140,16 @@ GP_fit <- function(
     nug_thres = 20,
     trace = FALSE,
     maxit = 100,
-	corr = list(
-	    type = "exponential",
-	    power = 1.95), 
+    corr = list(
+        type = "exponential",
+        power = 1.95), 
     optim_start = NULL) {
     if (!is.matrix(X)) {
-    	X = as.matrix(X)
+        X = as.matrix(X)
     }
     ## Checking to make sure that the X design is scaled between 0 and 1
     if ((min(X) < 0) | (max(X) > 1) | ((max(X) - min(X)) <= 0.5)) {
-    	warning("X should be in range (0, 1)")
+        warning("X should be in range (0, 1)")
     }
     n <- nrow(X)
     d <- ncol(X)
@@ -163,27 +163,27 @@ GP_fit <- function(
     ## Need to make sure that the control values are relatively higher / lower and need 
     ## to print a warning if they are not
     if (length(control) != 3) {
-    	stop("control is defined incorrectly. Wrong number of arguments. \n")
+        stop("control is defined incorrectly. Wrong number of arguments. \n")
     }
     if (control[1] < control[2]) { 
-    	stop("control is defined incorrectly. Need control[1] >= control[2]. \n")
+        stop("control is defined incorrectly. Need control[1] >= control[2]. \n")
     }
     if (control[2] < control[3]) {
-    	stop("control is defined incorrectly. Need control[2] >= control[3]. \n")
+        stop("control is defined incorrectly. Need control[2] >= control[3]. \n")
     }
     ## Checking to see if the vigen starting values  
     ## for the optim runs are in the correct format
     if (!is.null(optim_start)) {
-    	if (!is.matrix(optim_start)) {
-    		if (length(optim_start)/d != floor(length(optim_start)/d)) {
-    			stop("The dimension of optim_start does not match the dimension
-    					of the problem \n")
-    		}
-    		optim_start = matrix(optim_start, byrow = TRUE, ncol = d)
-    	} else if (ncol(optim_start) != d) {
-    		stop("The dimension of optim_start does not match the dimension
-    				of the problem \n")
-    	}
+        if (!is.matrix(optim_start)) {
+            if (length(optim_start)/d != floor(length(optim_start)/d)) {
+                stop("The dimension of optim_start does not match the dimension
+                        of the problem \n")
+            }
+            optim_start = matrix(optim_start, byrow = TRUE, ncol = d)
+        } else if (ncol(optim_start) != d) {
+            stop("The dimension of optim_start does not match the dimension
+                    of the problem \n")
+        }
     }
     param_search <- control[1]
     param_percent <- control[2]
@@ -209,11 +209,11 @@ GP_fit <- function(
         X = param_init_ps, 
         MARGIN = 1L, 
         FUN = function(row) GP_deviance(
-    	    beta = row,
-    	    X = X,
-    	    Y = Y,
-    	    nug_thres = nug_thres,
-    	    corr = corr))
+            beta = row,
+            X = X,
+            Y = Y,
+            nug_thres = nug_thres,
+            corr = corr))
     
     ## Need to order the initial values based on their deviance
     deviance2 <- deviance1[order(deviance1[, 1L, drop = TRUE]), , drop = FALSE]
@@ -245,38 +245,38 @@ GP_fit <- function(
     ## 1 near each of the ends and one near the middle of the range, 
     ## this is only necessary above 1 dimension
     if (d >= 2L) {
-    	param_wrap = matrix(
-    	    c(0.2, 0.5, 0.8) *
-    	         (beta_range[2L] - beta_range[1L]) + beta_range[1L],
-    	    byrow = TRUE)
+        param_wrap = matrix(
+            c(0.2, 0.5, 0.8) *
+                 (beta_range[2L] - beta_range[1L]) + beta_range[1L],
+            byrow = TRUE)
     
-    	# Need to run optim() on the wrapped function the 3 times 
-    	# in order to find the lowest starting points of the 3 values
-    	dev <- matrix(NA_real_, nrow = 3L, ncol = 3L)
-    	for (ipw in seq_len(nrow(param_wrap))) {
-    		temp <- optim(
-    		    par = param_wrap[ipw],
-    		    fn = dev_wrapper,
-    		    X = X,
-    		    Y = Y,
-    		    nug_thres = nug_thres,
-    			corr = corr,
-    		    method = "L-BFGS-B",
-    		    lower = param_lower,
-    		    upper = param_upper, 
-    			control = list(maxit = maxit)) 
-    		dev[ipw, 1:3] <- c(
-    		    temp$par,
-    		    temp$value, 
-    		    param_wrap[ipw, 1L, drop = TRUE])
-    	}
-    	## Take the best of the 3 based on the likelihood value
-    	dev <- dev[order(dev[, 2L]), ]
+        # Need to run optim() on the wrapped function the 3 times 
+        # in order to find the lowest starting points of the 3 values
+        dev <- matrix(NA_real_, nrow = 3L, ncol = 3L)
+        for (ipw in seq_len(nrow(param_wrap))) {
+            temp <- optim(
+                par = param_wrap[ipw],
+                fn = dev_wrapper,
+                X = X,
+                Y = Y,
+                nug_thres = nug_thres,
+                corr = corr,
+                method = "L-BFGS-B",
+                lower = param_lower,
+                upper = param_upper, 
+                control = list(maxit = maxit)) 
+            dev[ipw, 1:3] <- c(
+                temp$par,
+                temp$value, 
+                param_wrap[ipw, 1L, drop = TRUE])
+        }
+        ## Take the best of the 3 based on the likelihood value
+        dev <- dev[order(dev[, 2L]), ]
     
     ##---------------------------------------------------------##
-    	## Combining the 2*d centers from the clusters with the 
-    	## single point from the diagonal search
-    	param_init <- rbind(rep(dev[1L, 1L], d), param_init)
+        ## Combining the 2*d centers from the clusters with the 
+        ## single point from the diagonal search
+        param_init <- rbind(rep(dev[1L, 1L], d), param_init)
     }
     
     #############################################################
@@ -287,43 +287,43 @@ GP_fit <- function(
     dev_val <- matrix(NA_real_, nrow = nrow(param_init), ncol = d + 1L)
     
     for (ipi in seq_len(nrow(param_init))) {
-    	temp <- optim(
-    	    par = param_init[ipi, , drop = TRUE],
-    	    fn = GP_deviance,
-    	    X = X,
-    	    Y = Y,
-    	    nug_thres = nug_thres,
-    		corr = corr,
-    	    method = "L-BFGS-B",
-    	    lower = param_lower,
-    	    upper = param_upper, 
-    		control = list(maxit = maxit))
-    	dev_val[ipi, ] <- c(temp$par, temp$value)
+        temp <- optim(
+            par = param_init[ipi, , drop = TRUE],
+            fn = GP_deviance,
+            X = X,
+            Y = Y,
+            nug_thres = nug_thres,
+            corr = corr,
+            method = "L-BFGS-B",
+            lower = param_lower,
+            upper = param_upper, 
+            control = list(maxit = maxit))
+        dev_val[ipi, ] <- c(temp$par, temp$value)
     }
     #############################################################
     ## Making a print statement of what the progress of the optimizer
     ## only if trace == TRUE
     if (trace) {
-    	optim_result = cbind(param_init,dev_val)
-    	col_name = NULL
-    	if (d==1){
-    		row_name = NULL
-    	} else {
-    		row_name = c("Diagonal Search")
-    	}
-    	for (i in 1:d){
-    		col_name = cbind(col_name, paste("Beta", as.character(i), "Start"))
-    	}
-    	for (i in 1:d){
-    		col_name = cbind(col_name, paste("Beta", as.character(i), "Final"))
-    	}
-    	col_name = cbind(col_name, "Deviance Value")
-    	for (i in seq_len(param_clust)) {
-    		row_name = cbind(row_name, paste("Start", as.character(i)))
-    	}
-    	colnames(optim_result) = col_name
-    	rownames(optim_result) = row_name
-    	print(optim_result)
+        optim_result = cbind(param_init,dev_val)
+        col_name = NULL
+        if (d==1){
+            row_name = NULL
+        } else {
+            row_name = c("Diagonal Search")
+        }
+        for (i in 1:d){
+            col_name = cbind(col_name, paste("Beta", as.character(i), "Start"))
+        }
+        for (i in 1:d){
+            col_name = cbind(col_name, paste("Beta", as.character(i), "Final"))
+        }
+        col_name = cbind(col_name, "Deviance Value")
+        for (i in seq_len(param_clust)) {
+            row_name = cbind(row_name, paste("Start", as.character(i)))
+        }
+        colnames(optim_result) = col_name
+        rownames(optim_result) = row_name
+        print(optim_result)
     }
     # value
     dev_val <- dev_val[order(dev_val[, d + 1L]), ]

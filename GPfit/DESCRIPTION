@@ -9,4 +9,4 @@ Imports: lhs (>= 0.5), lattice (>= 0.18-8)
 Suggests: testthat
 License: GPL-2
 NeedsCompilation: no
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

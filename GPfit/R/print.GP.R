@@ -54,7 +54,7 @@
 
 print.GP <- function(x, ...) {
     if (!is.GP(x)) {
-    	stop("The object in question is not of class \"GP\" \n")
+        stop("The object in question is not of class \"GP\" \n")
     }
     corr = x$correlation_param
     
@@ -64,9 +64,9 @@ print.GP <- function(x, ...) {
     cat(ncol(x$X))
     cat("\n\n")
     if (corr$type == "exponential"){
-    	cat("Correlation: Exponential (power = ", corr$power, ")",sep="")
+        cat("Correlation: Exponential (power = ", corr$power, ")",sep="")
     } else {
-    	cat("Correlation: Matern (nu = ", corr$nu, ")",sep="")
+        cat("Correlation: Matern (nu = ", corr$nu, ")",sep="")
     }
     cat("\n")
     cat("Correlation Parameters: \n")

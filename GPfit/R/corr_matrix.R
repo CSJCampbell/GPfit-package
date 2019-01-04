@@ -102,13 +102,13 @@ corr_matrix <- function(
     ## Checking to make sure the data is a matrix, and sets it as one 
     ## if it is not
     if (!is.matrix(X)){
-    	X = as.matrix(X)
+        X = as.matrix(X)
     }
     d = ncol(X)
     n = nrow(X)
     ## Checking the dimensions between the two inputs 
     if (d != length(beta)){
-    	stop("The dimensions of beta and X do not match. \n")
+        stop("The dimensions of beta and X do not match. \n")
     }
     # output object
     R <- matrix(0, nrow = n, ncol = n)
@@ -124,42 +124,42 @@ corr_matrix <- function(
     # return corr matrix R 
     switch(corr$type, 
         "exponential" = {
-        	power <- corr$power
-        	if (is.null(power)){
-        		power <- 1.95
-        	}
-        	
-        	absdiff <- absdiff^power
-        	Beta <- matrix(beta, nrow = (length(absdiff) / d), ncol = d, byrow = TRUE)
-        	Rtemp <- (10^Beta) * absdiff
-        	# summarise
-        	Rtemp <- rowSums(Rtemp)
-        	R[rcoord] <- Rtemp
-        	R <- R + t(R)
-        	R <- exp(-R)
-        	R
+            power <- corr$power
+            if (is.null(power)){
+                power <- 1.95
+            }
+            
+            absdiff <- absdiff^power
+            Beta <- matrix(beta, nrow = (length(absdiff) / d), ncol = d, byrow = TRUE)
+            Rtemp <- (10^Beta) * absdiff
+            # summarise
+            Rtemp <- rowSums(Rtemp)
+            R[rcoord] <- Rtemp
+            R <- R + t(R)
+            R <- exp(-R)
+            R
         },
         "matern" = {
-        	nu <- corr$nu
-        	if (is.null(nu)){
-        		nu <- 2.5
-        	}
-        	
-        	Beta <- 10^beta
-        	Beta <- matrix(Beta, ncol = d, nrow = (length(absdiff)/d), byrow = TRUE)
-        	absdiff <- 2 * sqrt(nu) * absdiff * (Beta)
-        	pos <- which(absdiff == 0)
-        	Rtemp <- 1 / (gamma(nu) * 2^(nu - 1)) * (absdiff)^nu * 
-        	    besselK(x = absdiff, nu = nu)
-        	Rtemp[pos] <- 1
+            nu <- corr$nu
+            if (is.null(nu)){
+                nu <- 2.5
+            }
+            
+            Beta <- 10^beta
+            Beta <- matrix(Beta, ncol = d, nrow = (length(absdiff)/d), byrow = TRUE)
+            absdiff <- 2 * sqrt(nu) * absdiff * (Beta)
+            pos <- which(absdiff == 0)
+            Rtemp <- 1 / (gamma(nu) * 2^(nu - 1)) * (absdiff)^nu * 
+                besselK(x = absdiff, nu = nu)
+            Rtemp[pos] <- 1
             # summarise
-        	Rtemp <- apply(X = Rtemp, MARGIN = 1L, FUN = prod)
-        	# populate matrix upper tri
-        	R[rcoord] <- Rtemp
-        	# lower tri
-        	R <- R + t(R)
-        	diag(R) <- 1
-        	R
+            Rtemp <- apply(X = Rtemp, MARGIN = 1L, FUN = prod)
+            # populate matrix upper tri
+            R[rcoord] <- Rtemp
+            # lower tri
+            R <- R + t(R)
+            diag(R) <- 1
+            R
         }, 
         stop("corr type must be 'exponential' or 'matern'"))
 }

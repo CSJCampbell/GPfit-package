@@ -86,10 +86,10 @@ GP_deviance <- function(
     Y,
     nug_thres = 20,
     corr = list(
-	    type = "exponential",
-	    power = 1.95)) {
+        type = "exponential",
+        power = 1.95)) {
     if (!is.matrix(X)) {
-    	X = as.matrix(X)
+        X = as.matrix(X)
     }
     n = nrow(X)
     d = ncol(X)
