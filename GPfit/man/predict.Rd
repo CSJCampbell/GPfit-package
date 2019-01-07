@@ -16,7 +16,7 @@
 \item{xnew}{the (\code{n_new x d}) design matrix of test points where model
 predictions and MSEs are desired}
 
-\item{M}{the number of iterations. See `Details'}
+\item{M}{the number of iterations. See 'Details'}
 
 \item{\dots}{for compatibility with generic method \code{\link{predict}}}
 }

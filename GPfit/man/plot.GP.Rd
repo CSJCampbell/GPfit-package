@@ -72,7 +72,7 @@ plot(GPmodel)
 n <- 7
 d <- 1
 computer_simulator <- function(x) {
-    y <- log(x+0.1)+sin(5*pi*x)
+    y <- log(x + 0.1) + sin(5 * pi * x)
     return(y)
 }
 set.seed(1)
@@ -86,13 +86,13 @@ plot(GPmodel, resolution = 100, line_type = c(6,2), pch = 5)
 
 ## 2D Example: GoldPrice Function
 computer_simulator <- function(x) {
-    x1 <- 4*x[,1] - 2
-    x2 <- 4*x[,2] - 2
-    t1 <- 1 + (x1 + x2 + 1)^2*(19 - 14*x1 + 3*x1^2 - 14*x2 + 
-        6*x1*x2 + 3*x2^2)
-    t2 <- 30 + (2*x1 -3*x2)^2*(18 - 32*x1 + 12*x1^2 + 48*x2 - 
-        36*x1*x2 + 27*x2^2)
-    y <- t1*t2
+    x1 <- 4 * x[, 1] - 2
+    x2 <- 4 * x[, 2] - 2
+    t1 <- 1 + (x1 + x2 + 1)^2 * (19 - 14 * x1 + 3 * x1^2 - 14 * x2 + 
+        6 * x1 * x2 + 3 * x2^2)
+    t2 <- 30 + (2 * x1 - 3 * x2)^2 * (18 - 32 * x1 + 12 * x1^2 + 48 * x2 - 
+        36 * x1 * x2 + 27 * x2^2)
+    y <- t1 * t2
     return(y)
 }
 n <- 30 

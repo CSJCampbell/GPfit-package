@@ -27,8 +27,11 @@ gpf1 <- GP_fit(
     X = m1,
     Y = y1)
 # goodness of fit
-plot(x = fitted(gpf1), y = y1, asp = 1)
-abline(coef = c(0, 1), col = "red")
+plot(
+    x = fitted(gpf1)[, "Y_hat"], 
+    y = y1, 
+    asp = 1)
+abline(coef = c(0, 1), col = "red", lty = 2)
 # predict for new records
 gpp1 <- predict(gpf1, 
     xnew = cbind(
@@ -36,5 +39,10 @@ gpp1 <- predict(gpf1,
         am = mtcars$am[id], 
         ds = scale_norm(mtcars$disp[id], range = mtcars$disp)))
 # response forecast
-cbind(actual = mtcars$mpg[id], predicted = gpp1$Y_hat)
+res <- cbind(actual = mtcars$mpg[id], predicted = gpp1$Y_hat)
+res
+points(
+    x = res[, "predicted"], 
+    y = res[, "actual"], 
+    col = "green")
 ```

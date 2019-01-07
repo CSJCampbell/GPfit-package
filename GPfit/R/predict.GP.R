@@ -22,7 +22,7 @@
 #' @param object a class \code{GP} object estimated by \code{GP_fit}
 #' @param xnew the (\code{n_new x d}) design matrix of test points where model
 #' predictions and MSEs are desired
-#' @param M the number of iterations. See `Details'
+#' @param M the number of iterations. See 'Details'
 #' @param \dots for compatibility with generic method \code{\link{predict}}
 #' @return Returns a list containing the predicted values (\code{Y_hat}), the
 #' mean squared errors of the predictions (\code{MSE}), and a matrix
@@ -121,7 +121,7 @@ predict.GP <- function(
     power <- corr$power
     nu <- corr$nu
     
-    if (d != ncol(xnew)){
+    if (d != ncol(xnew)) {
         stop("The training and prediction data sets are of 
         different dimensions. \n")
     }
@@ -131,34 +131,37 @@ predict.GP <- function(
     delta <- object$delta
     
     dim(beta) <- c(d, 1L)
-    R <- corr_matrix(X,beta,corr)
+    R <- corr_matrix(X, beta = beta, corr)
     
-    One <- rep(1L, n)
+    Zero <- matrix(0, ncol = 1L, nrow = n)
+    One <- matrix(1, ncol = 1L, nrow = n)
+    tOne <- matrix(1, ncol = n, nrow = 1L)
     LO <- diag(n)
-    Sig <- R + delta*LO
+    Sig <- R + delta * LO
     L <- chol(Sig)
+    tL <- t(L)
     
     ## adding in the check on delta to see about the iterative approach
     if (delta == 0) {
-        Sig_invOne <- solve(L, solve(t(L), One))
-        Sig_invY <- solve(L, solve(t(L), Y))
-        Sig_invLp <- solve(L, solve(t(L), LO))
+        Sig_invOne <- solve(a = L, b = solve(a = tL, b = One))
+        Sig_invY <- solve(a = L, b = solve(a = tL, b = Y))
+        Sig_invLp <- solve(a = L, b = solve(a = tL, b = LO))
     } else {
     ## Adding in the iterative approach section
         s_Onei <- One
         s_Yi <- Y
         s_Li <- LO
-        Sig_invOne <- matrix(0, ncol = 1, nrow = n)
-        Sig_invY <- matrix(0, ncol = 1, nrow = n)
+        Sig_invY <- Sig_invOne <- Zero
         Sig_invLp <- matrix(0, ncol = n, nrow = n)
+        
         for (it in seq_len(M)) {
-            s_Onei <- solve(L, solve(t(L), delta*s_Onei))
+            s_Onei <- solve(a = L, b = solve(a = tL, b = delta * s_Onei))
             Sig_invOne <- Sig_invOne + s_Onei/delta
-    
-            s_Yi <- solve(L,solve(t(L),delta*s_Yi))
+            
+            s_Yi <- solve(a = L, b = solve(a = tL, b = delta * s_Yi))
             Sig_invY <- Sig_invY + s_Yi/delta
-    
-            s_Li <- solve(L,solve(t(L),delta*s_Li))
+            
+            s_Li <- solve(a = L, b = solve(a = tL, b = delta * s_Li))
             Sig_invLp <- Sig_invLp + s_Li/delta
         }
     }
@@ -171,64 +174,74 @@ predict.GP <- function(
     switch(corr$type,
         "exponential" = {
             for (kk in seq_len(nnew)) {
-                ## Changing to accomadate the itterative approach
-                xn <- matrix(xnew[kk,], nrow = 1)
-                r <- exp(-(abs(X-as.matrix(rep(1,n))%*%(xn))^power)%*%(10^beta))
-                yhat <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invY
+                ## Changing to accomadate the iterative approach
+                xn <- xnew[kk, , drop = FALSE]
+                r <- exp(-(abs(X - One %*% xn)^power) %*% (10^beta))
+                tr <- t(r)
+                yhat <- (((1 - tr %*% Sig_invOne) / (tOne %*% Sig_invOne)) %*% 
+                        tOne + tr) %*% Sig_invY
                 Y_hat[kk] <- yhat
                 
                 ## Adding iterative steps
                 if (delta == 0) {
-                    Sig_invr <- solve(L,solve(t(L),r))
+                    Sig_invr <- solve(a = L, b = solve(a = tL, b = r))
                 } else {
                     ## if delta != 0, start iterations
                     s_ri <- r
-                    Sig_invr <- matrix(0, ncol = 1, nrow = n)
+                    Sig_invr <- Zero
                     for (it in seq_len(M)) {
-                        s_ri <- solve(L,solve(t(L),delta*s_ri))
+                        s_ri <- solve(a = L, b = solve(a = tL, b = delta * s_ri))
                         Sig_invr <- Sig_invr + s_ri/delta
                     }
                 }
-                cp_delta_r <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invr
+                cp_delta_r <- (((1 - tr %*% Sig_invOne) / (tOne %*% Sig_invOne)) %*% 
+                        t(One) + tr) %*% Sig_invr
             
-                cp_delta_Lp <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invLp
-                mse <- sig2*(1-2*cp_delta_r+cp_delta_Lp%*%R%*%t(cp_delta_Lp))
-                MSE[kk] <- mse*(mse>0)
+                cp_delta_Lp <- (((1 - tr %*% Sig_invOne) / (tOne %*% Sig_invOne)) %*% 
+                        tOne + tr) %*% Sig_invLp
+                mse <- sig2 * (1 - 2 * cp_delta_r + cp_delta_Lp %*% R %*% t(cp_delta_Lp))
+                MSE[kk] <- mse * (mse > 0L)
             }
         },
         "matern" = {
             for (kk in seq_len(nnew)) {
                 ## Changing to accomodate the iterative approach
-                xn <- matrix(xnew[kk,],nrow=1)
+                xn <- xnew[kk, , drop = FALSE]
                 temp <- 10^beta
-                temp <- matrix(temp,ncol=d,nrow=(length(X)/d),byrow=TRUE)
-                temp <- 2*sqrt(nu)*abs(X-as.matrix(rep(1,n))%*%(xn))*(temp)
-                ID <- which(temp==0)
+                temp <- matrix(temp, 
+                    ncol = d, nrow = (length(X) / d), 
+                    byrow = TRUE)
+                temp <- 2 * sqrt(nu) * abs(X - One %*% xn) * temp
+                ID <- which(temp == 0L)
                 
-                rd<-(1/(gamma(nu)*2^(nu-1)))*(temp^nu)*besselK(temp,nu)    
-                rd[ID]<-1
+                rd <- (1 / (gamma(nu) * 2^(nu - 1))) * (temp^nu) * besselK(temp, nu)    
+                rd[ID] <- 1L
                 
-                r <- matrix(apply(rd,1,prod),ncol=1)        
-                yhat <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invY
+                r <- matrix(apply(X = rd, MARGIN = 1L, FUN = prod), ncol = 1L)
+                tr <- t(r)
+                yhat <- (((1 - tr %*% Sig_invOne) / (tOne %*% Sig_invOne)) %*% 
+                        tOne + tr) %*% Sig_invY
                 Y_hat[kk] <- yhat
                 
-                ## Adding itterative steps
+                ## Adding iterative steps
                 if (delta == 0) {
-                    Sig_invr <- solve(L,solve(t(L),r))
+                    Sig_invr <- solve(a = L, b = solve(a = tL, b = r))
                 } else {
-                    ## if delta != 0, start itterations
+                    ## if delta != 0, start iterations
                     s_ri <- r
-                    Sig_invr <- matrix(0, ncol = 1, nrow = n)
+                    Sig_invr <- Zero
                     for (it in seq_len(M)) {
-                        s_ri <- solve(L,solve(t(L),delta*s_ri))
+                        s_ri <- solve(a = L, b = solve(a = tL, b = delta * s_ri))
                         Sig_invr <- Sig_invr + s_ri/delta
                     }
                 }
-                cp_delta_r <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invr
+                cp_delta_r <- (((1 - tr %*% Sig_invOne) / (tOne %*% Sig_invOne)) %*% 
+                        tOne + tr) %*% Sig_invr
             
-                cp_delta_Lp <- (((1-t(r)%*%Sig_invOne)/(t(One)%*%Sig_invOne))%*%t(One)+t(r))%*%Sig_invLp
-                mse <- sig2*(1-2*cp_delta_r+cp_delta_Lp%*%R%*%t(cp_delta_Lp))
-                MSE[kk] <- mse*(mse>0)
+                cp_delta_Lp <- (((1 - tr %*% Sig_invOne) / (tOne %*% Sig_invOne)) %*% 
+                        tOne + tr) %*% Sig_invLp
+                mse <- sig2 * (1L - 2L * cp_delta_r + cp_delta_Lp %*% R %*% t(cp_delta_Lp))
+                MSE[kk] <- mse * (mse > 0L)
             }
         }, 
         stop("unrecognised corr type"))
