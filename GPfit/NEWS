@@ -1,12 +1,13 @@
-GPfit v1.0-2 (Release date: 2019-04-01)
+GPfit v1.0-3 (Release date: 2019-01-11)
 ==============
 
 Changes:
 
+* Refactored GP_fit() for improved calculation speed.
+* Refactored predict.GP() for improved prediction speed.
 * Added scale_norm() as helper to rescale dimensions into 0,1 range.
-* Added fitted() method for 'GP' class.
+* Added fitted.GP() method.
 * Added testthat unit tests.
-* Refactored `GP_fit` for improved calculation speed.
 
 GPfit v1.0-0 (Release date: 2015-04-01)
 ==============
