@@ -61,7 +61,7 @@ test_that("check predict.GP", {
         expected = gpp2$Y_hat)
     smse2 <- sum(gpp2$MSE)
     expect_true(
-        object = smse2 > 4 & smse2 < 30)
+        object = smse2 >= 0 & smse2 < 30)
     # input data
     expect_equal(
         object = gpp2$complete_data[, 1:3],
