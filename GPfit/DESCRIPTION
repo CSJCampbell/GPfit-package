@@ -1,7 +1,7 @@
 Package: GPfit
 Title: Gaussian Processes Modeling
-Version: 1.0-4
-Date: 2019-01-12
+Version: 1.0-5
+Date: 2019-01-14
 Authors@R: c(
     person("Blake", "MacDoanld", role = "aut"),
     person("Hugh", "Chipman", email = "hugh.chipman@acadiau.ca", role = c("aut", "cre")),
