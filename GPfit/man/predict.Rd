@@ -40,6 +40,12 @@ used in calculating \eqn{\hat{y}_{\delta_{lb},M}(x)} and
 }
 \section{Methods (by class)}{
 \itemize{
+\item \code{GP}: The \code{predict} method 
+returns a list of elements Y_hat (fitted values), 
+Y (dependent variable), MSE (residuals), and 
+completed_data (the matrix of independent variables, 
+Y_hat, and MSE).
+
 \item \code{GP}: The \code{fitted} method extracts the complete data.
 }}
 
@@ -101,7 +107,6 @@ head(fitted(GPmodel))
 xvector <- seq(from = 0,to = 1, length.out = 10)
 xdf <- expand.grid(x = xvector, y = xvector)
 predict(GPmodel, xdf)
-
 }
 \references{
 Ranjan, P., Haynes, R., and Karsten, R. (2011). A

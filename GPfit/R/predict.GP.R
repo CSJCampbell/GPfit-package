@@ -4,7 +4,6 @@
 
 
 #' @name predict
-#' @aliases predict.GP
 #' @title Model Predictions from GPfit
 #' 
 #' @description Computes the regularized predicted response \eqn{\hat{y}_{\delta_{lb},M}(x)}
@@ -34,6 +33,7 @@
 #' Computationally Stable Approach to Gaussian Process Interpolation of
 #' Deterministic Computer Simulation Data, Technometrics, 53(4), 366 - 378.
 #' @keywords Gaussian Process Model Prediction
+#' @importFrom stats predict fitted
 #' @examples
 #' 
 #' ## 1D Example
@@ -92,9 +92,21 @@
 #' xvector <- seq(from = 0,to = 1, length.out = 10)
 #' xdf <- expand.grid(x = xvector, y = xvector)
 #' predict(GPmodel, xdf)
-#' 
+
+NULL
+
+#' @name predict.GP
+#' @noRd
 #' @export
-#' @importFrom stats predict fitted
+
+NULL
+
+#' @describeIn predict The \code{predict} method 
+#' returns a list of elements Y_hat (fitted values), 
+#' Y (dependent variable), MSE (residuals), and 
+#' completed_data (the matrix of independent variables, 
+#' Y_hat, and MSE).
+#' @export
 #' @method predict GP
 
 predict.GP <- function(
