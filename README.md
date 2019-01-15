@@ -1,10 +1,15 @@
 # GPfit-package
 
 [![Build Status](https://travis-ci.org/CSJCampbell/GPfit-package.svg?branch=master)](https://travis-ci.org/CSJCampbell/GPfit-package)
+[![codecov](https://codecov.io/github/CSJCampbell/GPfit-package/branch/master/graphs/badge.svg)](https://codecov.io/github/CSJCampbell/GPfit-package)
 
 A computationally stable approach of fitting a Gaussian Process (GP) model to a deterministic simulator. 
 
 Branch of CRAN package with recommended updates. Changes improve performance by ~2 times.
+
+This package describes a Gaussian Process within an _n_-dimensional hypercube, each with boundaries [0, 1]. 
+The `scale_norm` helper function has a range argument to allow padding of individual dimensions for 
+the known extent of the dimension.
 
 ```{r}
 library(GPfit)
