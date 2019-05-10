@@ -3,9 +3,9 @@
 ##
 ## May 8th, 2012
 
-dev_wrapper <- function(beta, X, Y, nug_thres, ...){
-    if (!is.matrix(X)){
-        x <- as.matrix(X)
+dev_wrapper <- function(beta, X, Y, nug_thres, ...) {
+    if (!is.matrix(X)) {
+        X <- as.matrix(X)
     }
     d <- ncol(X)
     beta <- rep(beta, d)
